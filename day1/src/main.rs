@@ -1,10 +1,7 @@
 use anyhow::Result;
 use regex::Regex;
-use std::borrow::Cow;
 use std::path::PathBuf;
-use std::rc::Rc;
-use std::sync::{Arc, Mutex};
-use std::{str, u32, u8};
+use std::str;
 use tokio::fs;
 use tokio::io::AsyncReadExt;
 
