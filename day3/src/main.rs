@@ -137,11 +137,11 @@ fn part1_part2(map: Vec<Vec<char>>) {
     let result: i64 = result_nums
         .iter()
         .fold(0 as i64, |state, num| *num as i64 + state as i64);
-    println!("{result:?}");
+    println!("Part1: {result:?}");
 
     // part 2 --->
     println!(
-        "{:?}",
+        "Part2: {:?}",
         gears
             .into_iter()
             .fold(0, |state, gear| state + gear.get_ratio())
