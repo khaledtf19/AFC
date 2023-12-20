@@ -3,7 +3,6 @@ use std::{
     fs::File,
     io::Read,
     str::{self},
-    u32,
 };
 
 #[derive(Debug, Clone, Copy)]
