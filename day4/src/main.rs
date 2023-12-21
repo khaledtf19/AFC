@@ -49,63 +49,34 @@ fn main() -> Result<()> {
     Ok(())
 }
 fn resolve_line(result: &mut Vec<u32>, line: String, instances: &mut Instances, y: i32) {
-    let mut start = false;
-    let mut is_second = false;
-    let mut arr_nums: Vec<u32> = Vec::new();
-    let mut num_string = String::from("");
-    let mut result_num: u32 = 0;
     let ins = instances.get_instances(y + 1);
-    let mut count = 0;
 
-    for (i, ch) in line.chars().enumerate() {
-        if ch == ':' {
-            start = true;
-            continue;
-        }
-        if ch == '|' {
-            is_second = true;
-            continue;
-        }
-        if !start {
-            continue;
-        }
-        if ch.is_ascii_digit() {
-            num_string += ch.to_string().as_str();
-            if i == line.len() - 1 {
-                if arr_nums.contains(&num_string.parse().unwrap()) {
-                    if result_num == 0 {
-                        result_num = 1;
-                        count += 1;
-                    } else {
-                        result_num *= 2;
-                        count += 1;
-                    }
-                }
-                num_string = String::from("");
-            }
-            continue;
-        }
-        if ch.is_whitespace() && !&num_string.is_empty() {
-            if !is_second {
-                arr_nums.push(num_string.parse().unwrap());
-            } else {
-                if arr_nums.contains(&num_string.parse().unwrap_or(0)) {
-                    if result_num == 0 {
-                        result_num = 1;
-                        count += 1;
-                    } else {
-                        result_num *= 2;
-                        count += 1;
-                    }
-                }
-            }
-            num_string = String::from("");
-        }
-    }
+    let split: Vec<&str> = line.split(":").collect();
+    let nums: Vec<Vec<&str>> = split[1]
+        .split("|")
+        .map(|nums| {
+            nums.split(" ")
+                .map(|num| num.trim())
+                .filter(|s| !s.is_empty())
+                .collect()
+        })
+        .collect();
+    let result_nums: Vec<u32> = nums[0]
+        .clone()
+        .into_iter()
+        .filter(|num| nums[1].contains(num))
+        .map(|num| num.parse().unwrap())
+        .collect();
 
-    for i in y + 1..count + y + 1 {
+    for i in y + 1..result_nums.len() as i32 + y + 1 {
         instances.join(i + 1, ins);
     }
 
-    result.push(result_num);
+    result.push(result_nums.iter().fold(0, |state, _| {
+        if state == 0 {
+            return 1;
+        } else {
+            return state * 2;
+        }
+    }) as u32);
 }
